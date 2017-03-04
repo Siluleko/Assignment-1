@@ -20,3 +20,11 @@ summary(anscombe)
 
 
 ```
+```{r xy_plot, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', dev='svg', fig.path= "./figures/"}
+data("anscombe")
+plot(anscombe$x1,anscombe$y1)
+abline(lm(y1 ~ x1, data = anscombe))
+
+
+```
+

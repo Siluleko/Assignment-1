@@ -30,7 +30,6 @@ abline(lm(y1 ~ x1, data = anscombe))
 ```{r data_import, echo=TRUE}
 library(readr)
 df<-data.frame(read.csv("analgesic.csv",header=T))
-df
 ```
 ```{r data_summary, echo=TRUE}
 dim(df)
@@ -42,10 +41,6 @@ summary(df)
 ```{r data_tidy, echo=TRUE}
 library(dplyr)
 library(tidyr)
-df_1 <- gather(df, key=key, value=value, Measurement_1:Measurement_3, -ID)
-df_2 <- group_by(df_1, ID, Group)
-summarise(df_2, mean = mean(value))
-
 ```
 
 

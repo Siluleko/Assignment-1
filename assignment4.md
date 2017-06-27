@@ -159,23 +159,3 @@ I love Octocat. She's the coolest cat in town.
     ##     intersect, setdiff, setequal, union
 
     library(tidyr)
-    df_1 <- gather(df, key=key, value=value, Measurement_1:Measurement_3, -ID)
-    df_2 <- group_by(df_1, ID, Group)
-    summarise(df_2, mean = mean(value))
-
-    ## Source: local data frame [40 x 3]
-    ## Groups: ID [?]
-    ## 
-    ##       ID     Group     mean
-    ##    <int>    <fctr>    <dbl>
-    ## 1      1 Analgesic 24.33333
-    ## 2      2 Analgesic 26.00000
-    ## 3      3 Analgesic 24.66667
-    ## 4      4 Analgesic 23.66667
-    ## 5      5 Analgesic 25.00000
-    ## 6      6 Analgesic 23.66667
-    ## 7      7 Analgesic 26.66667
-    ## 8      8 Analgesic 23.33333
-    ## 9      9 Analgesic 22.66667
-    ## 10    10 Analgesic 24.00000
-    ## # ... with 30 more rows

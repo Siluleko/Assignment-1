@@ -42,10 +42,130 @@ summary(df)
 ```{r data_tidy, echo=TRUE}
 library(dplyr)
 library(tidyr)
+#changing data from wide to long format
 df_1 <- gather(df, key=key, value=value, Measurement_1:Measurement_3, -ID)
+#Group data according to means across the measurements made on each individual
 df_2 <- group_by(df_1, ID, Group)
+#Find descriptive stats for data df_2
 summarise(df_2, mean = mean(value))
 
 ```
+```{r tidy_data, echo=TRUE}
+##chunk 1
+# Null hypothesis
+#HO: The chicks weights is dependent on the feed
+#Alternative hypothesis 
+#H1: the chicks weight is not dependent on the feed
+# read chick weight
+x<-read.csv("chick-weights.csv")
+# tidy the data
+model.frame.default(formula = x$weight ~ x$feed)
+
+# state statistical test
+chickanova <-aov(weight~feed, data = x)
+summary(chickanova)
+
+#underlying assumption
+"compares means or samples of more than 3 groups"
+# degrees of freedom and p value
+df = 5
+"p-value < 0.05"
+"accept null hypothesis"
+```
+```{r the hotzone, echo=TRUE}
+### chunk 2
+##Null hypothesis
+#Drinking contaminated water does not cause gastroenteritis
+#Alternative hypothesis
+#drinking contaminated water does cause gastroenteritis
+library(knitr)
+# read outbreak of severe gastroenteritis
+x <- read.csv("gastroenteritis.csv")
+y <- xtabs(~Consumption + Outcome, data = x)
+y
+barplot(y, beside = TRUE, ylab = "water consumption", xlab = "clinical presentation",main = "Investigation of gastroenteritis outbreak", col = c("yellow", "black", "red"))
+legend("top", c("<1 glasses/day", ">4 glasses/day", "1 to 4 glasses/day"), fill = c("yellow", "black", "red"))
+# statistical test
+Z <- chisq.test(y, correct = TRUE)
+
+##Underlying assumptions
+#two categorical variables from a single population
+#used to determine whether there is an association between 2 variable names 
+## interpretation of outcomes
+#p< 0.05, therefor reject the null hypothesis and accept the alternative hypothesis
+
+```
+```{r Nausea, echo=TRUE}
+###chunk 3
+##Null hypothesis
+#Recieving chemotherapy does not cause nausea
+##Alternative hypothesis
+#Recieving chemotherapy does cause nausea
+# read the intensity of nausea
+A <- read.csv("nausea (1).csv")
+
+#tidy data
+# rating scale is anchored at 0(no nausea) to 6(severe nausea and vomiting) therefore change row 8 coloumn 3.
+A[8,3] = 4
+A
+##plotting of data
+plot(A$Nausea_before~A$Patient, type = "l", ylim = c(0,6), xlab = "Patients", ylab = "nausea score", main = "The intensity of nausea before and after receiving a 5ht3-receptor blocker")
+lines(A$Nausea_after~A$Patient, col= "green")
+legend ("top", c("Nausea_before", "Nausea_after"),fill = c("black", "green"))
+
+# statistical test
+wilcox.test(A$Nausea_before, A$Nausea_after, paired = TRUE)
+## Test assumption
+#The data is paired and non-parametric
+#two measurements were taken from the same sample group. 
+#P< 0.05 Therefore reject the null hypothesis and accept the alternative hypothesis
+
+```
+```{r echo= TRUE}
+##Null hypothesis
+#The housing price is not dependent on the interest rate
+##Alternative hypothesis
+#The housing price is dependent on the interest rate
+# import data
+
+G <- read.csv("housing-prices (1).csv")
+G
+# Tidy data
+interest= G$interest_rate
+house_price = G$median_house_price_USD
+head(cbind(interest, house_price))
+
+# scatter plot
+plot( interest, house_price, xlab= "interest", ylab = "house_price")
+abline(lm(G$median_house_price_USD ~ G$interest_rate, data = G), col= "blue", lwd= 2)
+# linear regression
+G1 <- lm(G$median_house_price_USD ~ G$interest_rate, data = G)
+summary(G1)
+ # diagnostic plot 1
+plot( x= G1$fitted.values, y=G1$residuals, main = "Homoskedasticity", pch = 19, col= "blue")
+abline(h=0, col= "green", lwd= 2)
+
+#diagnostic plot 2 : Gaussian residual distribution
+qqnorm(G1$residuals)
+qqline(G1$residuals)
+
+# Binary outcome variable: the variables have non-Gaussian error distribution
+glm (G$median_house_price_USD ~ G$interest_rate, data = G)
+
+## test assumptions
+  #I did the scatter plot to determine the trend or the relationship
+  # disgnostics for linear regression
+  # I did qq plot to determine if the residuals are normally distributed 
+  # I did the Gaussian residual distribution to determine the variance of the fitted values
+  # I did the generalized linear model because the diagnostics I ran were not normally distributed.
+  ## test interpretation
+  # p-value = 0.01937 therefore reject the null hypotehsis and accept the  alternative hypothesis.
+  # degrees of freedom : 15 Total (i.e. Null);  14 Residual
+  # test statistics
+  # F-statistic: 6.974 on 1
+
+##KOLMOGOROV-SMIRNOV AND ANDERSON DARLING TESTS WERE USED TO TEST FOR PARAMETRIC AND NON-PARAMETRIC DATA
+```
+
 
 
